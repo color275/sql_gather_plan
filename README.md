@@ -32,7 +32,7 @@ SQL를 통해 데이터 조회
 
 ### QuickSight
 - 전체 SQL 리스트, Plan Diff 확인
-- 각 버전에서의 Plan 결과 및 차이 확인
+- 각 DB 버전에서의 Plan 결과 및 차이 확인
 - SQL FullText 확인
 
 ![Alt text](img/quicksight.png)
