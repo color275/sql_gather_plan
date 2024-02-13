@@ -65,25 +65,12 @@ def execute_plan(db, sql) :
     connection = mysql.connector.connect(**config)
 
     try:
-        # SQL 쿼리
         sql_query = sql
-
-        # MySQL 커서 생성
         cursor = connection.cursor()
-
-        # SQL 쿼리 실행
         cursor.execute("EXPLAIN FORMAT=JSON " + sql_query)
-
-        # 실행 계획 가져오기
         explain_result = cursor.fetchone()
 
-        # JSON 포맷의 실행 계획 출력
-        # print(explain_result[0])
-
         explain_json = json.loads(explain_result[0])
-
-        # pprint(explain_json)
-        # print("####################")
 
         return find_and_print_table(explain_json), None
 
@@ -92,7 +79,6 @@ def execute_plan(db, sql) :
         return None, error
 
     finally:
-        # 연결 및 커서 닫기
         cursor.close()
         connection.close()
 
@@ -216,9 +202,7 @@ test_event = {
   ]
 }
 
-# context 객체는 이 예제에서는 사용하지 않지만, 필요에 따라 모방할 수 있습니다.
 test_context = {}
 
 if __name__ == "__main__":
-    # 테스트 event와 context를 lambda_handler에 전달
     response = lambda_handler(test_event, test_context)

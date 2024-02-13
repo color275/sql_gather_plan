@@ -96,18 +96,14 @@ def get_sql(db_identifier, start_time, end_time, gather_period) :
     return all_metrics
 
 def find_first_sql_command(text):
-    # SQL 명령어와 해당 명령어의 위치를 저장할 딕셔너리
     positions = {}
     
-    # 각 SQL 명령어에 대해 문자열 내 위치 검색
     for command in ["SELECT", "INSERT", "UPDATE", "DELETE"]:
         pos = text.upper().find(command)
         if pos != -1:
             positions[command] = pos
     
-    # 위치 딕셔너리가 비어있지 않다면, 가장 먼저 나오는 명령어 반환
     if positions:
-        # 위치에 따라 정렬하고 첫 번째 명령어 반환
         return sorted(positions, key=positions.get)[0]
     else:
         return "OTHER"
@@ -131,27 +127,21 @@ def main():
 
     try:
         for db_identifier in db_identifier_list:
-            # 모든 RDS 인스턴스 정보 조회
             response = rds_client.describe_db_instances()
             
-            # 조회된 인스턴스들 중 원하는 리소스 ID를 가진 인스턴스 찾기
             found = False
             for db_instance in response['DBInstances']:
                 if db_instance['DbiResourceId'] == db_identifier:
                     found = True
-                    # 원하는 리소스 ID를 가진 인스턴스의 DB 인스턴스 ID(이름) 입력
                     db_identifier_dict[db_identifier] = [db_instance['DBClusterIdentifier'], db_instance['DBInstanceIdentifier']]
-                    # print(db_instance['DBClusterIdentifier'])
                     print(f"DB INFO: {db_identifier_dict[db_identifier]}")
                     
-                    # Performance Insights 활성화 여부 확인
                     if not db_instance.get('PerformanceInsightsEnabled', False):
                         print(f"Performance Insights is disabled for instance: {db_instance['DBInstanceIdentifier']}")
                         sys.exit(1)  # Performance Insights가 비활성화된 경우 프로그램 종료
                     break
                     
             if not found:
-                # 일치하는 리소스 ID를 가진 인스턴스가 없는 경우
                 print(f"No matching RDS instance found for the provided resource ID: {db_identifier}")
                 sys.exit(1)
     except Exception as e:
@@ -213,7 +203,6 @@ def main():
                                 'last_update_time': current_time
                             },
                             ConditionExpression='attribute_not_exists(db_sql_tokenized_id)'                      
-                            # ConditionExpression='attribute_not_exists(db_sql_tokenized_id) AND attribute_not_exists(db_identifier)'  
                         )
 
                         sql_fulltext = get_sql_detail(db_identifier, db_sql_id)
@@ -232,7 +221,6 @@ def main():
                             "cpu_load": v
                         }       
                         
-                        # sql_list.append(data)
 
                         # JSON 문자열로 데이터 변환
                         json_data = json.dumps(data)
