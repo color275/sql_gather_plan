@@ -1,7 +1,20 @@
-# Architecture
+## 목적
+MySQL 버전 업그레이드 시 리스크를 줄이기 위해 SQL 전수 검사는 필수적으로 진행되어야 할 과정이지만 많은 시간과 노력이 필요한 작업입니다. 본 아키텍처는 보다 효율적이고 체계적으로 SQL 점검을 할 수 있도록 돕기 위해 구성되었습니다.
+
+각 단계를 요약하면 아래와 같습니다.
+1. Performance Insight API를 활용하여 Tokenized 된 SQL를 중복없이 수집
+1. 각 DB버전(v5.7, v8)에서 SQL Plan 수행
+1. SQL 과 Plan 결과를 S3에 저장
+1. Athena를 통한 질의 또는 QuickSight 통해 UI 인터페이스로 손쉽게 영향도 확인
+
+데이터베이스 버전 업그레이드 시 아래와 같이 활용할 수 있습니다.
+1. TOBE DB 버전에서 에러 발생되는 SQL 식별
+1. TOBE DB 버전에서 성능 문제가 발생될 SQL 식별
+
+## Architecture
 ![Architecture](img/arch.png)
 
-# Service 구성
+## Service 구성
 
 ### Performance Insgiht
 ...
